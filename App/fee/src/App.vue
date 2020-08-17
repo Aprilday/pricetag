@@ -23,7 +23,6 @@ export default {
   },
   methods: {
     getResult(data) {
-      console.log(data);
       if (data) {
         this.priceList = data.priceList;
         this.breakfast = data.breakfast;

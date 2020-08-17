@@ -62,11 +62,12 @@ export default {
       this.show = true;
     },
     addNight() {
-      this.priceList.push([
+      let initPrice = this.priceList[this.priceList.length - 1].price
+      this.priceList.push(
         {
-          price: '',
+          price: initPrice,
         }
-      ]);
+      );
     },
     minusNight() {
       this.priceList.splice(this.priceList.length - 1, 1);

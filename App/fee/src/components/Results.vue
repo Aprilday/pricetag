@@ -18,7 +18,7 @@
         <van-row>
             <van-col span="8">延退</van-col>
             <van-col span="8" class="tip">可享2小时免费延退</van-col>
-            <van-col span="8">50/小时</van-col>
+            <van-col span="8">半天房价</van-col>
         </van-row>
         <van-row>
             <van-col span="8">会员卡</van-col>
@@ -86,7 +86,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
 .res-wrap
-    padding 0 15px
+    padding 0 15px 30px
     .van-col
         height 50px
         &:last-child
