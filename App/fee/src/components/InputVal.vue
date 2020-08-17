@@ -2,7 +2,7 @@
   <div>
     <van-field label="入住间夜">
       <template #input>
-        <van-stepper integer v-model="nights" @plus="addNight" @minus="minusNight" />
+        <van-stepper integer v-model="nights" @plus="addNight" @minus="minusNight" :min="1"/>
       </template>
     </van-field>
     <van-field
@@ -11,9 +11,9 @@
       readonly
       clickable
       :value="item.price"
-      label="今日房价"
+      label="当日房价"
       placeholder="请点此输入"
-      @touchstart.native.stop="showKeyboard"
+      @touchstart.native.stop="showKeyboard(index)"
     />
     <van-field label="早餐份数">
       <template #input>
@@ -29,7 +29,7 @@
       @delete="onDelete"
     />
     <div class="btn-wrap">
-      <van-button :loading="loading" type="primary" block @click="compare">对比</van-button>
+      <van-button :loading="loading" type="primary" block @click="compare">查询</van-button>
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       show: false,
+      curPriceIndex: 0,
       priceList: [
         {
           price: '',
@@ -56,7 +57,8 @@ export default {
     }
   },
   methods: {
-    showKeyboard() {
+    showKeyboard(index) {
+      this.curPriceIndex = index;
       this.show = true;
     },
     addNight() {
@@ -67,24 +69,26 @@ export default {
       ]);
     },
     minusNight() {
-      console.log(this.nights);
-      if (this.nights > 1) {
-        this.priceList.splice(this.nights, 1);
-      }
+      this.priceList.splice(this.priceList.length - 1, 1);
     },
     onInput(val) {
-      this.price += '' + val;
+      let price = this.priceList[this.curPriceIndex].price || '';
+      this.priceList.splice(this.curPriceIndex, 1, {
+        price: '' + price + val,
+      })
     },
     onDelete() {
-      this.price = this.price.substring(0, this.price.length - 1);
+      let price = this.priceList[this.curPriceIndex].price;
+      this.priceList.splice(this.curPriceIndex, 1, {
+        price: price.substring(0, price.length - 1),
+      })
     },
     compare() {
-      if (!this.price) {
+      if (!this.priceList.every(item => item.price)) {
         this.$toast.fail('请输入价格');
       }
       this.$emit('compare', {
-        price: this.price,
-        nights: this.nights,
+        priceList: this.priceList,
         breakfast: this.breakfast,
       });
     }

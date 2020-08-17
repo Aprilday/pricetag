@@ -1,7 +1,7 @@
 <template>
   <div>
       <input-val @compare="getResult"></input-val>
-      <results v-if="resultField" :price="price" :nights="nights" :breakfast="breakfast"></results>
+      <results v-if="resultField" :priceList="priceList" :breakfast="breakfast" ></results>
   </div>
 </template>
 
@@ -17,16 +17,15 @@ export default {
   data() {
     return {
       resultField: false,
-      price: '',
-      nights: 1,
+      priceList: '',
       breakfast: 1,
     }
   },
   methods: {
     getResult(data) {
+      console.log(data);
       if (data) {
-        this.price = data.price;
-        this.nights = data.nights;
+        this.priceList = data.priceList;
         this.breakfast = data.breakfast;
       }
       this.resultField = true;

@@ -8,68 +8,73 @@
         <van-row>
             <van-col span="8">总房价</van-col>
             <van-col span="8">{{ memPrice }}</van-col>
-            <van-col span="8">400</van-col>
+            <van-col span="8">{{ normalPrice }}</van-col>
         </van-row>
         <van-row>
             <van-col span="8">早餐总价</van-col>
-            <van-col span="8">116</van-col>
-            <van-col span="8">232</van-col>
+            <van-col span="8">{{ memBreakfastTotalPrice }}</van-col>
+            <van-col span="8">{{ normalBreakfastTotalPrice }}</van-col>
         </van-row>
         <van-row>
             <van-col span="8">延退</van-col>
-            <van-col span="8">-</van-col>
-            <van-col span="8">0</van-col>
+            <van-col span="8" class="tip">可享2小时免费延退</van-col>
+            <van-col span="8">50/小时</van-col>
         </van-row>
         <van-row>
             <van-col span="8">会员卡</van-col>
-            <van-col span="8">219</van-col>
+            <van-col span="8">{{ MEMBERCARD_PRICE }}</van-col>
+            <van-col span="8">0</van-col>
+        </van-row>
+        <van-row>
+            <van-col span="8">优惠券</van-col>
+            <van-col span="8">首次可减{{ FIRST_COUPON }}</van-col>
             <van-col span="8">0</van-col>
         </van-row>
         <van-row>
             <van-col span="8">合计</van-col>
-            <van-col span="8" class="number-warning">657</van-col>
-            <van-col span="8">632</van-col>
+            <van-col span="8" class="number-warning">{{ memberTotal }}</van-col>
+            <van-col span="8">{{ normalTotal }}</van-col>
         </van-row>
-        <!-- 
-        <van-cell-group>
-            <van-cell title="会员" value="非会员" />
-            <van-nav-bar title="总房价" />
-            <van-cell title="322" value="400" />
-            <van-nav-bar title="早餐总价" />
-            <van-cell title="116" value="232" />
-            <van-nav-bar title="延退" />
-            <van-cell title="-" value="0" />
-            <van-nav-bar title="会员卡" />
-            <van-cell title="219" value="0" />
-            <van-nav-bar title="合计" />
-            <van-cell title="657" value="632">
-                <template #title>
-                    <div style="color:#ff976a;font-size: 17px;">657</div>
-                </template>
-                <template #default>
-                    <div style="color:#aaa;font-size: 15px;">632</div>
-                </template>
-            </van-cell>
-        </van-cell-group> -->
+        <van-row class="tip">新会员可获取一张30元优惠券，首次既可使用</van-row>
   </div>
 </template>
 
 <script>
 import NP from 'number-precision';
+import { BREAKFAST_PRICE, MEMBERCARD_PRICE, FIRST_COUPON } from '@/constants';
 export default {
   props: {
-    price: String,
-    nights: Number,
+    priceList: Array,
     breakfast: Number,
   },
   computed: {
       memPrice() {
-          return NP.times(this.price, 0.88);
-      }
+          return this.priceList.reduce((pre, next) => {
+              return NP.plus(pre, NP.times(next.price, 0.88))
+          }, 0);
+      },
+      normalPrice() {
+          return this.priceList.reduce((pre, next) => {
+              return NP.plus(pre, next.price);
+          }, 0);
+      },
+      memBreakfastTotalPrice() {
+          return NP.times(BREAKFAST_PRICE, this.breakfast - 1, this.priceList.length);
+      },
+      normalBreakfastTotalPrice() {
+          return NP.times(BREAKFAST_PRICE, this.breakfast, this.priceList.length);
+      },
+      memberTotal() {
+          return NP.minus(NP.plus(this.memPrice, this.memBreakfastTotalPrice, MEMBERCARD_PRICE), FIRST_COUPON);
+      },
+      normalTotal() {
+          return NP.plus(this.normalPrice, this.normalBreakfastTotalPrice);
+      },
   },
   data() {
     return {
-      
+        MEMBERCARD_PRICE,
+        FIRST_COUPON,
     }
   },
   methods: {
@@ -90,4 +95,7 @@ export default {
         &.number-warning
             font-size 18px
             color #ff976a
+    .tip
+        color #999
+        font-size 13px
 </style>
