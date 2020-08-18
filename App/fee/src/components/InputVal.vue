@@ -10,16 +10,12 @@
       :key="index"
       readonly
       clickable
+      clearable
       :value="item.price"
       label="当日房价"
       placeholder="请点此输入"
       @touchstart.native.stop="showKeyboard(index)"
     />
-    <van-field label="早餐份数">
-      <template #input>
-        <van-stepper v-model="breakfast" />
-      </template>
-    </van-field>
     <van-number-keyboard
       :show="show"
       extra-key="."
@@ -28,13 +24,11 @@
       @input="onInput"
       @delete="onDelete"
     />
-    <div class="btn-wrap">
-      <van-button :loading="loading" type="primary" block @click="compare">查询</van-button>
-    </div>
   </div>
 </template>
 
 <script>
+// import { html2Img } from '@/utils/utils';
 export default {
   props: {
     label: String
@@ -52,7 +46,6 @@ export default {
         }
       ],
       nights: 1,
-      breakfast: 1,
       loading: false,
     }
   },
@@ -62,44 +55,47 @@ export default {
       this.show = true;
     },
     addNight() {
+      // this.$emit('hideResult');
       let initPrice = this.priceList[this.priceList.length - 1].price
       this.priceList.push(
         {
           price: initPrice,
         }
       );
+      this.$emit('getData', {
+        priceList: this.priceList,
+      });
     },
     minusNight() {
+      // this.$emit('hideResult');
       this.priceList.splice(this.priceList.length - 1, 1);
+      this.$emit('getData', {
+        priceList: this.priceList,
+      });
     },
     onInput(val) {
+      // this.$emit('hideResult');
       let price = this.priceList[this.curPriceIndex].price || '';
       this.priceList.splice(this.curPriceIndex, 1, {
         price: '' + price + val,
       })
+      this.$emit('getData', {
+        priceList: this.priceList,
+      });
+      // this.$nextTick(() => {
+      //   html2Img();
+      // })
     },
     onDelete() {
+      // this.$emit('hideResult');
       let price = this.priceList[this.curPriceIndex].price;
       this.priceList.splice(this.curPriceIndex, 1, {
         price: price.substring(0, price.length - 1),
       })
-    },
-    compare() {
-      if (!this.priceList.every(item => item.price)) {
-        this.$toast.fail('请输入价格');
-      }
-      this.$emit('compare', {
+      this.$emit('getData', {
         priceList: this.priceList,
-        breakfast: this.breakfast,
       });
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="stylus" scoped>
-.btn-wrap
-  width 80%
-  margin 20px auto
-</style>
