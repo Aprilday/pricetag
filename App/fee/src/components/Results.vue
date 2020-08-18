@@ -34,7 +34,7 @@
             <van-col span="8">差价</van-col>
             <van-col span="16" class="number-warning">{{ pricedifference }}</van-col>
         </van-row>
-        <!-- <van-row class="tip">新会员可获取一张30元优惠券，首次既可使用</van-row> -->
+        <van-row class="tip">入住享受华住会会员积分</van-row>
   </div>
 </template>
 
