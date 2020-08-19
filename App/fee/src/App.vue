@@ -10,7 +10,7 @@
       <input-val @getData="getResult" @hideResult="hideResult"></input-val>
       <van-field label="早餐份数">
         <template #input>
-          <van-stepper v-model="breakfast" />
+          <van-stepper v-model="breakfast" :min="0"/>
         </template>
       </van-field>
       <van-field

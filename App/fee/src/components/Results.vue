@@ -64,6 +64,9 @@ export default {
       },
       // 会员早餐总价
       memBreakfastTotalPrice() {
+          if (this.breakfast === 0) {
+              return 0;
+          }
           return NP.times(BREAKFAST_PRICE, this.breakfast - MEMBER_CARD_BREAKFAST_NUM[this.cardType], this.priceList.length);
       },
       // 非会员早餐总价
