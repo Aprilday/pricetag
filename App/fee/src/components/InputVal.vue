@@ -12,7 +12,7 @@
       clickable
       clearable
       :value="item.price"
-      label="当日房价"
+      :label="getLabel(index)"
       placeholder="请点此输入"
       @touchstart.native.stop="showKeyboard(index)"
     />
@@ -47,9 +47,21 @@ export default {
       ],
       nights: 1,
       loading: false,
+      priceLabel: '今日房价',
     }
   },
   methods: {
+    getLabel(index) {
+      let priceLabel = '';
+      if (index === 0) {
+        priceLabel = '今日房价';
+      } else if (index === 1) {
+        priceLabel = '次日房价';
+      } else {
+        priceLabel = `第${index + 1}日房价`;
+      }
+      return priceLabel;
+    },
     showKeyboard(index) {
       this.curPriceIndex = index;
       this.show = true;

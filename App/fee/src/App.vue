@@ -41,6 +41,11 @@ import InputVal from './components/InputVal';
 import Results from './components/Results';
 import { GOLD_CARD, SILVER_CARD, COUPONS } from '@/constants';
 // import { html2Img } from '@/utils/utils';
+const env = 'https://cakesh.applinzi.com';
+// const env = 'http://localhost:5050'
+const API = {
+    stat: env + '/memCardStat'
+}
 export default {
   name: 'App',
   components: {
@@ -69,7 +74,7 @@ export default {
           price: '',
         }
       ],
-      breakfast: 1,
+      breakfast: 0,
     }
   },
   methods: {
@@ -90,6 +95,16 @@ export default {
         this.$toast.fail('请输入价格');
         return;
       }
+      fetch(API.stat, {
+          body: JSON.stringify({}),
+          mode: 'cors',
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+      }).then(res => res = res.json()).then(() => {
+        // console.log(res);
+      })
       this.resultField = true;
     },
     hideResult() {
